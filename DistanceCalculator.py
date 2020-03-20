@@ -1,4 +1,5 @@
-import random
+import os
+
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -35,11 +36,11 @@ def visualise(vertices, distances, path):
     plt.figure(figsize=(16, 16))
     for i in range(len(vertices)):
         G.add_node(i, pos=(vertices[i][1], vertices[i][2]))
-    pos = nx.get_node_attributes(G, 'pos')
 
     for edge in path:
         G.add_edge(edge[0], edge[1], weight=distances[edge[0], edge[1]])
 
+    pos = nx.get_node_attributes(G, 'pos')
     labels = nx.get_edge_attributes(G, 'weight')
 
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
@@ -48,7 +49,7 @@ def visualise(vertices, distances, path):
     # plt.savefig("nodes.png")
 
 
-def find_nearest(distances, begin_vertex):
+def find_nearest(distances, begin_vertex, instance):
     begin = begin_vertex
     min_distance = None
     min_index = None
@@ -63,14 +64,15 @@ def find_nearest(distances, begin_vertex):
     path = [(begin, min_index)]
     tab = [begin, min_index]
     print(path)
-    for i in range(3):
+    n = int(np.ceil(len(distances) / 2) - 2)
+    for i in range(n):
         min_distance = None
         min_index = None
         min_act = None
         for act in path:
             for j in range(len(distances)):
                 if j not in tab:
-                    distance = min(distances[act[0], j], distances[j, act[1]])
+                    distance = distances[act[0], j] + distances[j, act[1]]
                     if min_distance is None:
                         min_distance = distance
                         min_index = j
@@ -84,15 +86,17 @@ def find_nearest(distances, begin_vertex):
         print("Tab:", tab)
         print("Path: ", path)
         print("Min dist: ", min_distance, " Min ind: ", min_index, " Min act: ", min_act)
-    print("PathLen:", len(path), " Path: ", path)
-    # save_hamilton_path("path" + str(begin_vertex), path)
+    print("PathLen:", len(path), "\nPath: ", path)
+    save_hamilton_path(os.path.join(instance, "path" + str(begin_vertex)), path)
     return path
+
 
 def path_distance(path, distances):
     dist = 0
     for edge in path:
         dist += distances[edge[0], edge[1]]
     return dist
+
 
 def add_between(path, act, j):
     new_path = []
@@ -122,10 +126,41 @@ def load_hamilton_path(file_path):
     return path
 
 
+def save_results(instance, results):
+    min_dist = min(results)
+    max_dist = max(results)
+    mean_dist = np.mean(results)
+    file_path = os.path.join(instance, "results.csv")
+    file = open(file_path, "w+")
+    file.write(instance + ";\n")
+    file.write("min;" + str(min_dist) + "\n")
+    file.write("max;" + str(max_dist) + "\n")
+    file.write("mean;" + str(mean_dist) + "\n")
+    print(results)
+    file.close()
+
+
 if __name__ == '__main__':
     vertices = parse_file("kroA100.tsp")
     print(vertices)
     distances = calculate_distance(vertices)
-    path = find_nearest(distances, 7)
-    # path = load_hamilton_path("path0")
+    instances = ["kroA100", "kroB100"]
+    # Second algorithm 'Zal'
+    for instance in instances:
+        vertices = parse_file(instance + ".tsp")
+        distances = calculate_distance(vertices)
+        n = len(distances)
+        results = []
+        if not os.path.exists(instance + "Greedy"):
+            os.mkdir(instance + "Greedy")
+        for i in range(n):
+            path = find_nearest(distances, i, instance + "Greedy")
+            path_len = path_distance(path, distances)
+            results.append(path_len)
+        save_results(instance + "Greedy", results)
+
+    vertices = parse_file("kroA100.tsp")
+    distances = calculate_distance(vertices)
+    path = load_hamilton_path(os.path.join("kroA100Greedy", "path0"))
+    print(path)
     visualise(vertices, distances, path)
