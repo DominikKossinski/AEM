@@ -72,7 +72,7 @@ def find_nearest(distances, begin_vertex, instance):
         for act in path:
             for j in range(len(distances)):
                 if j not in tab:
-                    distance = distances[act[0], j] + distances[j, act[1]]
+                    distance = min(distances[act[0], j], distances[j, act[1]])
                     if min_distance is None:
                         min_distance = distance
                         min_index = j
