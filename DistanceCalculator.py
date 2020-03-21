@@ -30,7 +30,6 @@ def calculate_distance(vertices):
     # print(distances)
     return distances
 
-
 def visualise(vertices, distances, path):
     G = nx.Graph()
     plt.figure(figsize=(16, 16))
@@ -48,6 +47,37 @@ def visualise(vertices, distances, path):
     plt.show()
     # plt.savefig("nodes.png")
 
+def find_nearest_for_last(distances, begin_vertex, instance):
+    begin = begin_vertex
+    min_distance = None
+    min_index = None
+    for i in range(len(distances)):
+        if i != begin:
+            if min_distance is None:
+                min_distance = distances[begin, i]
+                min_index = i
+            elif min_distance > distances[begin, i]:
+                min_distance = distances[begin, i]
+                min_index = i
+    path = [(begin, min_index)]
+    tab = [begin, min_index]
+    n = int(np.ceil(len(distances) / 2) - 2)
+    for i in range(n):
+        min_distance = None
+        min_index = None
+        for j in range(len(distances)):
+            if j not in tab:
+                distance = distances[tab[-1], j]
+                if min_distance is None or min_distance > distance:
+                    min_distance = distance
+                    min_index = j
+        if len(path) > 1:
+            path = path[:-1]
+        path.append((tab[-1], min_index))
+        tab.append(min_index)
+        path.append((min_index, begin_vertex))
+        print(path)
+    return path
 
 def find_nearest(distances, begin_vertex, instance):
     begin = begin_vertex
@@ -87,7 +117,7 @@ def find_nearest(distances, begin_vertex, instance):
         print("Path: ", path)
         print("Min dist: ", min_distance, " Min ind: ", min_index, " Min act: ", min_act)
     print("PathLen:", len(path), "\nPath: ", path)
-    save_hamilton_path(os.path.join(instance, "path" + str(begin_vertex)), path)
+    #save_hamilton_path(os.path.join(instance, "path" + str(begin_vertex)), path)
     return path
 
 
@@ -141,11 +171,8 @@ def save_results(instance, results):
 
 
 if __name__ == '__main__':
-    vertices = parse_file("kroA100.tsp")
-    print(vertices)
-    distances = calculate_distance(vertices)
     instances = ["kroA100", "kroB100"]
-    # Second algorithm 'Zal'
+    #Second algorithm 'Zal'
     for instance in instances:
         vertices = parse_file(instance + ".tsp")
         distances = calculate_distance(vertices)
@@ -159,8 +186,22 @@ if __name__ == '__main__':
             results.append(path_len)
         save_results(instance + "Greedy", results)
 
-    vertices = parse_file("kroA100.tsp")
-    distances = calculate_distance(vertices)
-    path = load_hamilton_path(os.path.join("kroA100Greedy", "path0"))
-    print(path)
-    visualise(vertices, distances, path)
+    for instance in instances:
+        vertices = parse_file(instance + ".tsp")
+        distances = calculate_distance(vertices)
+        n = len(distances)
+        results = []
+        if not os.path.exists(instance + "Last"):
+            os.mkdir(instance + "Last")
+        for i in range(n):
+            path = find_nearest_for_last(distances, i, instance + "Last")
+            path_len = path_distance(path, distances)
+            results.append(path_len)
+        save_results(instance + "Last", results)
+    # 
+    # vertices = parse_file("kroA100.tsp")
+    # distances = calculate_distance(vertices)
+    # #path = load_hamilton_path(os.path.join("kroA100Greedy", "path0"))
+    # path = find_nearest(distances, 52, "kroA100Greedy")
+    # print(path)
+    # visualise(vertices, distances, path)
