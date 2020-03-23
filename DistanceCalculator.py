@@ -70,7 +70,7 @@ def find_nearest_with_regret(distances, begin_vertex, instance):
     path = [(begin, min_index)]
     tab = [begin, min_index]
     n = int(np.ceil(len(distances) / 2) - 2)
-    for i in range(n):
+    while len(tab) < n :
         min_distance = None
         min_index = None
         for j in range(len(distances)):
@@ -79,15 +79,25 @@ def find_nearest_with_regret(distances, begin_vertex, instance):
                 if min_distance is None or min_distance > distance:
                     min_distance = distance
                     min_index = j
-
+                    # print ("mn", min_index)
+        max_index = None
+        max_gain = None
         for v in range(1, len(tab) - 1):
             gain = distances[tab[v - 1], tab[v]] + distances[tab[v], tab[v + 1]] - distances[tab[v - 1], tab[v + 1]]
             if max_gain is None or max_gain < gain:
                 max_gain = gain
-                max_index = v
+                max_index = v #int(tab[v]) - 1
+                # print ("mx", v, max_index)
 
         if max_gain is not None and min_distance < max_gain:
+            # print (max_index)
+            # print (len(tab), len(path))
+            
+            path[max_index] = (tab[max_index - 1], tab[max_index + 1])
+            path.pop(max_index - 1)
             tab.pop(max_index)
+            # print (max_index)
+            # path.append((tab[max_index - 1], tab[max_index + 1]))
 
         if len(path) > 1:
             path = path[:-1]
