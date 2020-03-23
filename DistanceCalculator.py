@@ -47,6 +47,55 @@ def visualise(vertices, distances, path):
     plt.show()
     # plt.savefig("nodes.png")
 
+
+def find_nearest_with_regret(distances, begin_vertex, instance):
+    begin = begin_vertex
+    min_distance = None
+    min_index = None
+
+    max_gain = None
+    max_index = None
+
+    for i in range(len(distances)):
+        if i != begin:
+            if min_distance is None:
+                min_distance = distances[begin, i]
+                min_index = i
+            elif min_distance > distances[begin, i]:
+                min_distance = distances[begin, i]
+                min_index = i
+    path = [(begin, min_index)]
+    tab = [begin, min_index]
+    n = int(np.ceil(len(distances) / 2) - 2)
+    for i in range(n):
+        min_distance = None
+        min_index = None
+        for j in range(len(distances)):
+            if j not in tab:
+                distance = distances[tab[-1], j]
+                if min_distance is None or min_distance > distance:
+                    min_distance = distance
+                    min_index = j
+
+        for v in range(1, len(tab)-1):
+            gain = distances[tab[v-1], tab[v]] + distances[tab[v], tab[v+1]] - distances[tab[v-1], tab[v+1]]
+            if max_gain is None or max_gain < gain:
+                max_gain = gain
+                max_index = v
+
+
+        if max_gain is not None and min_distance < max_gain:
+            tab.pop(max_index)
+
+        if len(path) > 1:
+            path = path[:-1]
+        path.append((tab[-1], min_index))
+        tab.append(min_index)
+        path.append((min_index, begin_vertex))
+        print(path)
+    return path
+
+
 def find_nearest_for_last(distances, begin_vertex, instance):
     begin = begin_vertex
     min_distance = None
@@ -198,6 +247,21 @@ if __name__ == '__main__':
             path_len = path_distance(path, distances)
             results.append(path_len)
         save_results(instance + "Last", results)
+
+
+
+    for instance in instances:
+        vertices = parse_file(instance + ".tsp")
+        distances = calculate_distance(vertices)
+        n = len(distances)
+        results = []
+        if not os.path.exists(instance + "Regret"):
+            os.mkdir(instance + "Regret")
+        for i in range(n):
+            path = find_nearest_with_regret(distances, i, instance + "Regret")
+            path_len = path_distance(path, distances)
+            results.append(path_len)
+        save_results(instance + "Regret", results)
     # 
     # vertices = parse_file("kroA100.tsp")
     # distances = calculate_distance(vertices)
