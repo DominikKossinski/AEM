@@ -31,7 +31,7 @@ def calculate_distance(vertices):
     return distances
 
 
-def visualise(vertices, distances, path, filename, distance):
+def visualise(vertices, distances, path, filename, distance, save):
     G = nx.Graph()
     plt.figure(figsize=(16, 16))
     for i in range(len(vertices)):
@@ -45,8 +45,10 @@ def visualise(vertices, distances, path, filename, distance):
 
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
     nx.draw_networkx(G, pos, node_size=30, edge_labels=nx.get_node_attributes(G, "weight"))
-    plt.show()
-    plt.savefig(filename + "_" + distance + ".png")
+    if save:
+        plt.savefig(filename + "_" + distance + ".png")
+    else:
+        plt.show()
 
 
 def find_nearest_with_regret(distances, begin_vertex, instance):
@@ -230,7 +232,7 @@ def run():
     for instance in instances:
         vertices = parse_file(instance + ".tsp")
         distances = calculate_distance(vertices)
-        n = len(distances)
+        n =1 #len(distances)
         results = []
         if not os.path.exists(instance + "Last"):
             os.mkdir(instance + "Last")
@@ -243,7 +245,7 @@ def run():
     for instance in instances:
         vertices = parse_file(instance + ".tsp")
         distances = calculate_distance(vertices)
-        n = len(distances)
+        n = 1 #len(distances)
         results = []
         if not os.path.exists(instance + "Regret"):
             os.mkdir(instance + "Regret")
@@ -254,7 +256,7 @@ def run():
         save_results(instance + "Regret", results)
 
 
-def save_figs():
+def save_figs(save):
     instances = ["kroA100", "kroB100"]
     names = ["Last", "Regret"]
     for instance in instances:
@@ -263,8 +265,9 @@ def save_figs():
         for name in names:
             path = load_hamilton_path(os.path.join(instance + name, "path0"))
             dist = path_distance(path, distances)
-            visualise(vertices, distances, path, instance + name, str(dist))
+            visualise(vertices, distances, path, instance + name, str(int(dist)), save)
 
 
 if __name__ == '__main__':
-    save_figs()
+    run()
+    save_figs(False)
