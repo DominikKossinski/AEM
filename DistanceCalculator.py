@@ -99,16 +99,82 @@ def find_nearest_with_regret(distances, begin_vertex, instance):
             # print (max_index)
             # path.append((tab[max_index - 1], tab[max_index + 1]))
 
+
+        print(tab)
         if len(path) > 1:
             path = path[:-1]
         path.append((tab[-1], min_index))
         tab.append(min_index)
         path.append((min_index, begin_vertex))
-        print(path)
+
+    if begin_vertex == 0:
+        save_hamilton_path(os.path.join(instance, "path" + str(begin_vertex)), path)
+    print(path)
+    return path
+
+def my_regret(distances, begin_vertex, instance):
+    begin = begin_vertex
+    min_distance = None
+    min_index = None
+
+    max_gain = None
+    max_index = None
+
+    for i in range(len(distances)):
+        if i != begin:
+            if min_distance is None or min_distance > distances[begin, i]:
+                min_distance = distances[begin, i]
+                min_index = i
+    path = [(begin, min_index)]
+    tab = [begin, min_index]
+    n = int(np.ceil(len(distances) / 2) - 2)
+    for i in range(n):
+        min_distance = None
+        min_index = None
+        for j in range(len(distances)):
+            if j not in tab:
+                distance = distances[tab[-1], j]
+                if min_distance is None or min_distance > distance:
+                    min_distance = distance
+                    min_index = j
+
+        for v in range(1, len(tab) - 1):
+            gain = distances[tab[v - 1], tab[v]] + distances[tab[v], tab[v + 1]]
+            if max_gain is None or max_gain < gain:
+                max_gain = gain
+                max_index = v
+
+        if max_gain is not None:
+            best_index = None
+            best_gain = None
+            temp = tab[max_index]
+            tab.pop(max_index)
+            for i in range(1, len(tab) - 1):
+                gain = distances[tab[i], temp] + distances[temp, tab[i + 1]]
+                if best_gain is None or best_gain > gain:
+                    best_gain = gain
+                    best_index = i
+            if best_index is not None:
+                tab.insert(best_index, temp)
+            else:
+                tab.insert(max_index, temp)
+
+        tab.append(min_index)
+        print(tab)
+    print("Tab len:", len(tab))
+    path = build_path(tab)
     if begin_vertex == 0:
         save_hamilton_path(os.path.join(instance, "path" + str(begin_vertex)), path)
     return path
 
+def build_path(tab):
+    path = []
+    for i in range(len(tab)):
+        if i + 1 < len(tab):
+            path.append((tab[i], tab[i + 1]))
+        else:
+            path.append((tab[i], tab[0]))
+    return path
 
 def find_nearest_for_last(distances, begin_vertex, instance):
     begin = begin_vertex
@@ -242,7 +308,7 @@ def run():
     for instance in instances:
         vertices = parse_file(instance + ".tsp")
         distances = calculate_distance(vertices)
-        n =1 #len(distances)
+        n = len(distances)
         results = []
         if not os.path.exists(instance + "Last"):
             os.mkdir(instance + "Last")
@@ -255,12 +321,12 @@ def run():
     for instance in instances:
         vertices = parse_file(instance + ".tsp")
         distances = calculate_distance(vertices)
-        n = 1 #len(distances)
+        n = len(distances)
         results = []
         if not os.path.exists(instance + "Regret"):
             os.mkdir(instance + "Regret")
         for i in range(n):
-            path = find_nearest_with_regret(distances, i, instance + "Regret")
+            path = my_regret(distances, i, instance + "Regret")
             path_len = path_distance(path, distances)
             results.append(path_len)
         save_results(instance + "Regret", results)
@@ -280,4 +346,4 @@ def save_figs(save):
 
 if __name__ == '__main__':
     run()
-    save_figs(False)
+    save_figs(True)
