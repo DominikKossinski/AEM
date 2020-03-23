@@ -326,7 +326,7 @@ def run():
         if not os.path.exists(instance + "Regret"):
             os.mkdir(instance + "Regret")
         for i in range(n):
-            path = my_regret(distances, i, instance + "Regret")
+            path = find_nearest_with_regret(distances, i, instance + "Regret")
             path_len = path_distance(path, distances)
             results.append(path_len)
         save_results(instance + "Regret", results)
