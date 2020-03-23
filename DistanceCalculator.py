@@ -336,4 +336,4 @@ def save_figs(save):
 
 if __name__ == '__main__':
     run()
-    save_figs(False)
+    save_figs(True)
