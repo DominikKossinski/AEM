@@ -3,6 +3,8 @@ from problem import Problem
 from solution import Solution
 from nodes import Nodes
 
+VIS = True #Visualise or not
+
 def main():
     instances = ["kroA100"]#, "kroB100"]
     styles = ["steep"]#, "greedy"]
@@ -13,8 +15,9 @@ def main():
         problem = Problem(instance)
         sol = Nodes(problem, style)
         sol.set_random(problem)
-        # sol.visualise(False)
-        sol.outside_move()
+        if(VIS): sol.visualise(False)
+        sol.optimize_neighbours()
+        if(VIS): sol.visualise(False)
 
 if __name__ == '__main__':
     main()
