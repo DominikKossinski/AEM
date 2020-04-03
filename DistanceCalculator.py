@@ -1,9 +1,9 @@
 import os
-
-import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
 from ast import literal_eval as make_tuple
+
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
 
 
 def parse_file(path):
