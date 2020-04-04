@@ -71,7 +71,6 @@ def c_delta(distances, begin_solution, i, j, n):
     return delta
 
 
-# Not working
 def swap_edges(distances, vertices, n=50):
     begin_solution = create_random_solution(n)
     path = build_path(begin_solution)
