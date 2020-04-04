@@ -1,9 +1,9 @@
 import os
-
-import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
 from ast import literal_eval as make_tuple
+
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
 
 
 def parse_file(path):
@@ -70,7 +70,7 @@ def find_nearest_with_regret(distances, begin_vertex, instance):
     path = [(begin, min_index)]
     tab = [begin, min_index]
     n = int(np.ceil(len(distances) / 2) - 2)
-    while len(tab) < n :
+    while len(tab) < n:
         min_distance = None
         min_index = None
         for j in range(len(distances)):
@@ -86,19 +86,18 @@ def find_nearest_with_regret(distances, begin_vertex, instance):
             gain = distances[tab[v - 1], tab[v]] + distances[tab[v], tab[v + 1]] - distances[tab[v - 1], tab[v + 1]]
             if max_gain is None or max_gain < gain:
                 max_gain = gain
-                max_index = v #int(tab[v]) - 1
+                max_index = v  # int(tab[v]) - 1
                 # print ("mx", v, max_index)
 
         if max_gain is not None and min_distance < max_gain:
             # print (max_index)
             # print (len(tab), len(path))
-            
+
             path[max_index] = (tab[max_index - 1], tab[max_index + 1])
             path.pop(max_index - 1)
             tab.pop(max_index)
             # print (max_index)
             # path.append((tab[max_index - 1], tab[max_index + 1]))
-
 
         print(tab)
         if len(path) > 1:
@@ -111,6 +110,7 @@ def find_nearest_with_regret(distances, begin_vertex, instance):
         save_hamilton_path(os.path.join(instance, "path" + str(begin_vertex)), path)
     print(path)
     return path
+
 
 def my_regret(distances, begin_vertex, instance):
     begin = begin_vertex
@@ -167,6 +167,7 @@ def my_regret(distances, begin_vertex, instance):
         save_hamilton_path(os.path.join(instance, "path" + str(begin_vertex)), path)
     return path
 
+
 def build_path(tab):
     path = []
     for i in range(len(tab)):
@@ -175,6 +176,7 @@ def build_path(tab):
         else:
             path.append((tab[i], tab[0]))
     return path
+
 
 def find_nearest_for_last(distances, begin_vertex, instance):
     begin = begin_vertex
