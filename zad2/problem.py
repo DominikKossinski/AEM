@@ -28,11 +28,13 @@ class Problem():
                 distances[j][i] = distance
         return distances
 
-    def save_results(self, results):
+    def save_results(self,alg, style, results):
         min_dist = min(results)
         max_dist = max(results)
         mean_dist = np.mean(results)
-        file_path = os.path.join(self.name, "results.csv")
+        file_path = os.path.join(self.name, style, alg + "_results.csv")
+        if not os.path.exists(os.path.dirname(file_path)):
+            os.makedirs(os.path.dirname(file_path))
         file = open(file_path, "w+")
         file.write(self.name + ";\n")
         file.write("min;" + str(min_dist) + "\n")

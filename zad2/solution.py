@@ -55,7 +55,7 @@ class Solution():
                 path.append((nodes[i], nodes[0]))
         return path
 
-    def visualise(self, save, filename = ""):
+    def visualise(self, save, alg, style):
         G = nx.Graph()
         plt.figure(figsize=(16, 16))
         for i in range(len(self.p.vertices)):
@@ -70,7 +70,8 @@ class Solution():
         nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
         nx.draw_networkx(G, pos, node_size=30, edge_labels=nx.get_node_attributes(G, "weight"))
         if save:
-            plt.savefig(filename + "_" + self.distance + ".png")
+            plt.savefig(alg + "_" + style + ".png")
+            plt.show()
         else:
             plt.show()
 

@@ -29,15 +29,21 @@ class Edges(Solution):
     def optimize_greedy(self):
         self.path = self.build_path(self.nodes)
         print("Start distance", self.path_distance(self.path))
-        for a in range(100):
+        found = True
+        a = 0
+        while found:
+            print(a)
+            a += 1
+            found = False
             for i in range(len(self.nodes)):
-                for j in range(len(self.nodes)):
+                for j in range(i + 1, len(self.nodes) - 1):
                     if i != j:
                         delta = self.calculate_delta(i, j)
                         if delta < 0:
                             rev = self.nodes[i:j + 1][::-1]
                             self.nodes[i:j + 1] = rev
                             self.path = self.build_path(self.nodes)
+                            found = True
         self.path = self.build_path(self.nodes)
         print("End distance:", self.path_distance(self.path))
 
@@ -45,14 +51,18 @@ class Edges(Solution):
         self.path = self.build_path(self.nodes)
         print("Start distance", self.path_distance(self.path))
         min_delta = 0
-        for a in range(100):
+        found = True
+        while found:
+            found = False
             for i in range(len(self.nodes)):
                 for j in range(i + 1, len(self.nodes) - 1):
                     delta = self.calculate_delta(i, j)
                     if delta < min_delta:
-                        min_delta =  min_delta
+                        min_delta = min_delta
                         rev = self.nodes[i:j + 1][::-1]
                         self.nodes[i:j + 1] = rev
+                        found = True
 
         self.path = self.build_path(self.nodes)
+        self.dist = self.path_distance(self.path)
         print("Current distance:", self.path_distance(self.path))
