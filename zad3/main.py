@@ -19,18 +19,14 @@ def main():
             cm = CandidateMoves(problem)
             cm.set_random(problem)
             #cm.visualise(False, "alg", "")
-        # for i in range(2):
-        #     cm = CandidateMoves(problem)
-        #     cm.set_random(problem)
-        #     #cm.visualise(False, "alg", "")
-        #     start_time = time.time() * 1000
-        #     cm.optimize()
-        #     end_time = time.time() * 1000
-        #     elapsed_time = end_time - start_time
-        #     cm.visualise(False, "alg", "")
-        #     results.append(cm.dist)
-        #     times.append(elapsed_time)
-        # problem.save_results("CandidateMoves", "NoStyle", results, times)
+            start_time = time.time() * 1000
+            cm.optimize()
+            end_time = time.time() * 1000
+            elapsed_time = end_time - start_time
+            cm.visualise(False, "alg", "")
+            results.append(cm.dist)
+            times.append(elapsed_time)
+        problem.save_results("CandidateMoves", "NoStyle", results, times)
 
 
         for i in range(1):
