@@ -1,4 +1,4 @@
-from zad2.solution import Solution
+from solution import Solution
 import numpy as np
 
 

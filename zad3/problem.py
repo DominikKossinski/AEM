@@ -1,4 +1,7 @@
-from init import *
+import os
+
+import numpy as np
+
 
 class Problem():
     def __init__(self, name):
@@ -28,17 +31,29 @@ class Problem():
                 distances[j][i] = distance
         return distances
 
-    def save_results(self,alg, style, results):
+    def save_results(self,alg, style, results, times=None):
         min_dist = min(results)
         max_dist = max(results)
         mean_dist = np.mean(results)
+        if times is not None:
+            min_time = min(times)
+            max_time = max(times)
+            mean_time = np.mean(times)
+        else:
+            min_time = None
+            max_time = None
+            mean_time = None
         file_path = os.path.join(self.name, style, alg + "_results.csv")
         if not os.path.exists(os.path.dirname(file_path)):
             os.makedirs(os.path.dirname(file_path))
         file = open(file_path, "w+")
         file.write(self.name + ";\n")
         file.write("min;" + str(min_dist) + "\n")
-        file.write("max;" + str(max_dist) + "\n")
         file.write("mean;" + str(mean_dist) + "\n")
+        file.write("max;" + str(max_dist) + "\n")
+        if times is not None:
+            file.write("min_t;" + str(min_time) + "\n")
+            file.write("mean_t;" + str(mean_time) + "\n")
+            file.write("max_t;" + str(max_time) + "\n")
         print(results)
         file.close()
