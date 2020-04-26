@@ -79,13 +79,13 @@ class Edges(Solution):
                 new_nodes.append(nodes[i])
             for i in range(end + 1, len(nodes)):
                 new_nodes.append(nodes[i])
-        # else:
-        #     for i in range(len(nodes) - 1, start - 1, -1):
-        #         new_nodes.append(nodes[i])
-        #     for i in range(end + 1, start):
-        #         new_nodes.append(nodes[i])
-        #     for i in range(end, -1, -1):
-        #         new_nodes.append(nodes[i])
+        else:
+            for i in range(len(nodes) - 1, start - 1, -1):
+                new_nodes.append(nodes[i])
+            for i in range(end + 1, start):
+                new_nodes.append(nodes[i])
+            for i in range(end, -1, -1):
+                new_nodes.append(nodes[i])
         return new_nodes
 
     def calc_outer_move(self, v1, v2):
@@ -110,7 +110,7 @@ class Edges(Solution):
         if abs(v2_ind - v1_ind) == 0 or abs(v1_ind - v2_ind) == (self.n // 2) - 1:
             return 0
 
-        if v2_ind < v1_ind:
+        if v2_ind < v1_ind == v2_ind + 1:
             return 0
 
         delta -= self.p.distances[v1 - 1, self.nodes[v1_ind - 1] - 1]
