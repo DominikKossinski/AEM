@@ -11,7 +11,7 @@ from lom import Lom
 from edges import Edges
 
 def main():
-    instances = ["kroA200", "kroB100"]
+    instances = ["kroA200", "kroB200"]
     for instance in instances:
 
         results = []
@@ -20,7 +20,7 @@ def main():
 
         results = []
         times = []
-        for i in range(1):
+        for i in range(10):
             print(i)
             edg = Edges(problem, 'steep')
             edg.set_random(problem)

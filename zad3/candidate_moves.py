@@ -1,7 +1,6 @@
-from solution import Solution
 import numpy as np
 
-from edges import Edges, Action
+from zad3.edges import Edges, Action
 
 
 class CandidateMoves(Edges):
@@ -42,7 +41,7 @@ class CandidateMoves(Edges):
                             best_action = Action(i, j, "swap")
                             best_delta = delta
             if best_delta < 0:
-                print(best_action.v1, " v2", best_action.v2)
+                #print(best_action.v1, " v2", best_action.v2)
                 improved = True
                 if best_action.action == "swap":
                     self.do_swap_move(best_action.v1, best_action.v2)
