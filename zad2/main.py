@@ -10,7 +10,7 @@ VIS = True  # Visualise or not
 
 def main():
     instances = ["kroB100", "kroA100"]
-    styles = ["greedy"]
+    styles = ["greedy", "steep"]
 
     # grid = list(zip(instances, styles))# + list(zip(instances, styles[::-1]))
     for instance in instances:
