@@ -1,5 +1,8 @@
-from init import *
-from problem import Problem
+import random
+
+import networkx as nx
+import numpy as np
+import matplotlib.pyplot as plt
 
 class Solution():
     def __init__(self, problem):
