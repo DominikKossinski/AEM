@@ -36,8 +36,9 @@ class Edges(Solution):
         elif self.style == 'steep':
             self.new_steepest()
 
-    def rotate(self):
-        a = randint(1, len(self.nodes))
+    def rotate(self, a=None):
+        if a is None:
+            a = randint(1, len(self.nodes))
         for i in range(a):
             x = self.nodes.pop()
             self.nodes.insert(0, x)
@@ -49,15 +50,17 @@ class Edges(Solution):
         while improved:
             improved = False
             #self.rotate()
-            for i in range(1, len(self.path) - 2):
-                for j in range(i + 1, len(self.path)):
-                    if j - i == 1: continue
-                    new_nodes = self.nodes[:]
-                    new_nodes[i:j] = self.nodes[j - 1:i - 1:-1]
-                    if self.path_distance(self.build_path(new_nodes)) < self.path_distance(self.path):
-                        self.path = self.build_path(new_nodes)
-                        self.nodes = new_nodes
-                        improved = True
+            for b in range(len(self.path)):
+                self.rotate(1)
+                for i in range(1, len(self.path) - 2):
+                    for j in range(i + 1, len(self.path)):
+                        if j - i == 1: continue
+                        new_nodes = self.nodes[:]
+                        new_nodes[i:j] = self.nodes[j - 1:i - 1:-1]
+                        if self.path_distance(self.build_path(new_nodes)) < self.path_distance(self.path):
+                            self.path = self.build_path(new_nodes)
+                            self.nodes = new_nodes
+                            improved = True
 
         self.path = self.build_path(self.nodes)
         self.dist = self.path_distance(self.path)
@@ -72,18 +75,20 @@ class Edges(Solution):
             best_delta = 0
             best_nodes = None
             self.rotate()
-            for i in range(1, len(self.path) - 2):
-                for j in range(i + 1, len(self.path)):
-                    if j - i == 1: continue
-                    new_nodes = self.nodes[:]
-                    new_nodes[i:j] = self.nodes[j - 1:i - 1:-1]
-                    new_dist = self.path_distance(self.build_path(new_nodes))
-                    curr_dist = self.path_distance(self.path)
-                    if new_dist < curr_dist:
-                        if curr_dist - new_dist > best_delta:
-                            best_nodes = new_nodes
-                            best_delta = curr_dist - new_dist
-                            #improved = True
+            for b in range(len(self.path)):
+                self.rotate(1)
+                for i in range(1, len(self.path) - 2):
+                    for j in range(i + 1, len(self.path)):
+                        if j - i == 1: continue
+                        new_nodes = self.nodes[:]
+                        new_nodes[i:j] = self.nodes[j - 1:i - 1:-1]
+                        new_dist = self.path_distance(self.build_path(new_nodes))
+                        curr_dist = self.path_distance(self.path)
+                        if new_dist < curr_dist:
+                            if curr_dist - new_dist > best_delta:
+                                best_nodes = new_nodes
+                                best_delta = curr_dist - new_dist
+                                #improved = True
             if best_delta > 0:
                 self.path = self.build_path(best_nodes)
                 self.nodes = best_nodes
