@@ -25,28 +25,31 @@ class CandidateMoves(Edges):
             best_action = None
             best_delta = 0
             for i in self.v_indexes:
+                i_in = i in self.nodes
                 candidates = self.neighbours[i - 1]
                 for j in candidates:
                     if i == j: continue
-                    if (i in self.nodes and j in self.unused) or (j in self.nodes and i in self.unused):
+                    j_in = j in self.nodes
+                    if (i_in and not j_in) or (j_in and not i_in):
                         delta = self.calc_outer_move(i, j)
                         if delta < best_delta:
                             best_action = Action(i, j, "outer")
                             best_delta = delta
-                    if i in self.nodes and j in self.nodes:
+                    if i_in and j_in:
                         # print("Swap delta", self.calc_swap_move(i, j))
                         delta = self.calc_swap_move(i, j)
                         if delta < best_delta:
                             best_action = Action(i, j, "swap")
                             best_delta = delta
             if best_delta < 0:
+                print(best_action.v1, " v2", best_action.v2)
                 improved = True
                 if best_action.action == "swap":
                     self.do_swap_move(best_action.v1, best_action.v2)
                 else:
                     self.do_outer_move(best_action.v1, best_action.v2)
                 self.path = self.build_path(self.nodes)
-                #kself.visualise(False, "", "")
+                #self.visualise(False, "", "")
             else:
                 break
         self.path = self.build_path(self.nodes)

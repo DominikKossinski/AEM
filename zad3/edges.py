@@ -20,6 +20,7 @@ class Edges(Solution):
         super(Edges, self).__init__(problem)
         self.style = style
         self.v_indexes = list(map(lambda x: x[0], self.p.vertices))
+        self.n = len(self.v_indexes)
 
     def set_random(self, problem):
         v = problem.vertices.copy()
@@ -30,6 +31,7 @@ class Edges(Solution):
         self.v_indexes = list(map(lambda x: x[0], self.p.vertices))
         self.nodes = list(map(lambda x: x[0], self.nodes))
         self.unused = list(map(lambda x: x[0], self.unused))
+        self.n = len(self.v_indexes)
 
         self.path = self.build_path(self.nodes)
         self.dist = self.path_distance(self.path)
@@ -77,13 +79,13 @@ class Edges(Solution):
                 new_nodes.append(nodes[i])
             for i in range(end + 1, len(nodes)):
                 new_nodes.append(nodes[i])
-        else:
-            for i in range(len(nodes) - 1, start - 1, -1):
-                new_nodes.append(nodes[i])
-            for i in range(end + 1, start):
-                new_nodes.append(nodes[i])
-            for i in range(end, -1, -1):
-                new_nodes.append(nodes[i])
+        # else:
+        #     for i in range(len(nodes) - 1, start - 1, -1):
+        #         new_nodes.append(nodes[i])
+        #     for i in range(end + 1, start):
+        #         new_nodes.append(nodes[i])
+        #     for i in range(end, -1, -1):
+        #         new_nodes.append(nodes[i])
         return new_nodes
 
     def calc_outer_move(self, v1, v2):
@@ -94,7 +96,7 @@ class Edges(Solution):
             v2 = temp
         v1_ind = self.nodes.index(v1)
         pre = self.nodes[v1_ind - 1]
-        aft = self.nodes[(v1_ind + 1) % 50]
+        aft = self.nodes[(v1_ind + 1) % (self.n // 2)]
         delta -= self.p.distances[pre - 1, v1 - 1]
         delta -= self.p.distances[v1 - 1, aft - 1]
         delta += self.p.distances[pre - 1, v2 - 1]
@@ -105,16 +107,16 @@ class Edges(Solution):
         delta = 0
         v1_ind = self.nodes.index(v1)
         v2_ind = self.nodes.index(v2)
-        if abs(v2_ind - v1_ind) == 0 or abs(v1_ind - v2_ind) == 49:
+        if abs(v2_ind - v1_ind) == 0 or abs(v1_ind - v2_ind) == (self.n // 2) - 1:
             return 0
 
-        if v2_ind < v1_ind == v2_ind + 1:
+        if v2_ind < v1_ind:
             return 0
 
         delta -= self.p.distances[v1 - 1, self.nodes[v1_ind - 1] - 1]
-        delta -= self.p.distances[self.nodes[(v2_ind + 1) % 50] - 1, v2 - 1]
+        delta -= self.p.distances[self.nodes[(v2_ind + 1) % (self.n // 2)] - 1, v2 - 1]
 
-        delta += self.p.distances[v1 - 1, self.nodes[(v2_ind + 1) % 50] - 1]
+        delta += self.p.distances[v1 - 1, self.nodes[(v2_ind + 1) % (self.n // 2)] - 1]
         delta += self.p.distances[self.nodes[v1_ind - 1] - 1, v2 - 1]
         return delta
 
@@ -192,6 +194,9 @@ class Edges(Solution):
                             best_action = Action(i, j, "swap")
                             best_delta = delta
             if best_delta < 0:
+                print(best_action.v1, " v2", best_action.v2)
+                if best_action.action == "swap":
+                    print("v1 ind", self.nodes.index(best_action.v1), "v2 ind", self.nodes.index(best_action.v2))
                 improved = True
                 if best_action.action == "swap":
                     self.do_swap_move(best_action.v1, best_action.v2)
