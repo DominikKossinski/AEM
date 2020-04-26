@@ -10,7 +10,7 @@ def main():
         results = []
         times = []
         problem = Problem(instance)
-        for i in range(2):
+        for i in range(50):
             cm = CandidateMoves(problem)
             cm.set_random(problem)
             #cm.visualise(False, "alg", "")
@@ -18,7 +18,7 @@ def main():
             cm.optimize()
             end_time = time.time() * 1000
             elapsed_time = end_time - start_time
-            cm.visualise(False, "alg", "")
+            #cm.visualise(False, "alg", "")
             results.append(cm.dist)
             times.append(elapsed_time)
         problem.save_results("CandidateMoves", "NoStyle", results, times)

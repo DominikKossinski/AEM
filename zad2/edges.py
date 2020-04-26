@@ -18,7 +18,6 @@ class Edges(Solution):
 
     def __init__(self, problem, style):
         super(Edges, self).__init__(problem)
-        print(self.p.vertices)
         self.style = style
         self.v_indexes = list(map(lambda x: x[0], self.p.vertices))
 
@@ -78,6 +77,13 @@ class Edges(Solution):
                 new_nodes.append(nodes[i])
             for i in range(end + 1, len(nodes)):
                 new_nodes.append(nodes[i])
+        else:
+            for i in range(len(nodes) - 1, start - 1, -1):
+                new_nodes.append(nodes[i])
+            for i in range(end + 1, start):
+                new_nodes.append(nodes[i])
+            for i in range(end, -1, -1):
+                new_nodes.append(nodes[i])
         return new_nodes
 
     def calc_outer_move(self, v1, v2):
@@ -86,8 +92,6 @@ class Edges(Solution):
             temp = v1
             v1 = v2
             v2 = temp
-        if v1 not in self.nodes:
-            exit(-5)
         v1_ind = self.nodes.index(v1)
         pre = self.nodes[v1_ind - 1]
         aft = self.nodes[(v1_ind + 1) % 50]
@@ -103,14 +107,15 @@ class Edges(Solution):
         v2_ind = self.nodes.index(v2)
         if abs(v2_ind - v1_ind) == 0 or abs(v1_ind - v2_ind) == 49:
             return 0
-        if v2_ind < v1_ind:
-            return 0
-        else:
-            delta -= self.p.distances[v1 - 1, self.nodes[v1_ind - 1] - 1]
-            delta -= self.p.distances[self.nodes[(v2_ind + 1) % 50] - 1, v2 - 1]
 
-            delta += self.p.distances[v1 - 1, self.nodes[(v2_ind + 1) % 50] - 1]
-            delta += self.p.distances[self.nodes[v1_ind - 1] - 1, v2 - 1]
+        if v2_ind < v1_ind == v2_ind + 1:
+            return 0
+
+        delta -= self.p.distances[v1 - 1, self.nodes[v1_ind - 1] - 1]
+        delta -= self.p.distances[self.nodes[(v2_ind + 1) % 50] - 1, v2 - 1]
+
+        delta += self.p.distances[v1 - 1, self.nodes[(v2_ind + 1) % 50] - 1]
+        delta += self.p.distances[self.nodes[v1_ind - 1] - 1, v2 - 1]
         return delta
 
     def do_swap_move(self, v1, v2):

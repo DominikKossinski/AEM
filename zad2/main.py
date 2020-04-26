@@ -26,12 +26,12 @@ def main():
             #     results.append(sol.dist)
             # problem.save_results("nodes", style, results)
             results = []
-            for _ in range(1):
+            for _ in range(100):
                 ed = Edges(problem, style)
                 ed.set_random(problem)
-                if VIS: ed.visualise(False, "edges", style)
+                # if VIS: ed.visualise(False, "edges", style)
                 ed.optimize()
-                if VIS: ed.visualise(True, "edges", style)
+                # if VIS: ed.visualise(True, "edges", style)
                 results.append(ed.dist)
             problem.save_results("edges", style, results)
 
