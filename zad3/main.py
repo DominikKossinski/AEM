@@ -17,6 +17,23 @@ def main():
         results = []
         times = []
         problem = Problem(instance)
+
+        results = []
+        times = []
+        for i in range(1):
+            print(i)
+            edg = Edges(problem, 'steep')
+            edg.set_random(problem)
+            # edg.visualise(False, "alg", "")
+            start_time = time.time() * 1000
+            edg.optimize()
+            end_time = time.time() * 1000
+            elapsed_time = end_time - start_time
+            # edg.visualise(False, "alg", "")
+            results.append(edg.dist)
+            times.append(elapsed_time)
+        problem.save_results("Edges", "Steep", results, times)
+
         for i in range(1):
             print(i)
             cm = CandidateMoves(problem)
@@ -47,21 +64,7 @@ def main():
             times.append(elapsed_time)
         problem.save_results("ListOfMoves", "NoStyle", results, times)
 
-        # results = []
-        # times = []
-        # for i in range(100):
-        #     print(i)
-        #     edg = Edges(problem, 'steep')
-        #     edg.set_random(problem)
-        #     #edg.visualise(False, "alg", "")
-        #     start_time = time.time() * 1000
-        #     edg.optimize()
-        #     end_time = time.time() * 1000
-        #     elapsed_time = end_time - start_time
-        #     # edg.visualise(False, "alg", "")
-        #     results.append(edg.dist)
-        #     times.append(elapsed_time)
-        # problem.save_results("Edges", "Steep", results, times)
+
 
 
 if __name__ == '__main__':
