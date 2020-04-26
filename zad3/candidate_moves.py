@@ -1,7 +1,7 @@
 from solution import Solution
 import numpy as np
 
-from zad2.edges import Edges, Action
+from edges import Edges, Action
 
 
 class CandidateMoves(Edges):

@@ -17,11 +17,12 @@ class Lom(Edges):
         super(Lom, self).__init__(problem, 'steep')
         
         self.good_moves = []
-        self.new_moves = self.get_all_moves()
-
+        self.new_moves = []
         
     def optimize(self):
+        self.new_moves = self.get_all_moves()
         while True:
+            # print (self.new_moves)
             if len(self.new_moves) > 0:
                 for move in self.new_moves:
                     if move.delta < 0: self.good_moves.append(move)
@@ -38,8 +39,8 @@ class Lom(Edges):
             self.new_moves = self.get_new_moves(best_move)
 
     def apply_move(self, move):
-        if move.action == 'swap': self.do_swap_move()
-        if move.action == 'outer': self.do_outer_move()
+        if move.action == 'swap': self.do_swap_move(move.first, move.second)
+        if move.action == 'outer': self.do_outer_move(move.first, move.second)
             
     def check_move(self, move):
         if move.action == 'swap':
