@@ -11,7 +11,7 @@ class CandidateMoves(Edges):
 
     def find_five_nearest(self, vertex):
         dist = self.p.distances[vertex - 1]
-        return np.argsort(dist)[1:6]
+        return np.argsort(dist)[1:6] + 1
 
 
     def optimize(self):
@@ -39,6 +39,10 @@ class CandidateMoves(Edges):
                         delta = self.calc_swap_move(i, j)
                         if delta < best_delta:
                             best_action = Action(i, j, "swap")
+                            best_delta = delta
+                        delta = self.calc_swap_move(j, i)
+                        if delta < best_delta:
+                            best_action = Action(j, i, "swap")
                             best_delta = delta
             if best_delta < 0:
                 #print(best_action.v1, " v2", best_action.v2)
