@@ -11,13 +11,13 @@ from lom import Lom
 from edges import Edges
 
 def main():
-    instances = ["kroA200", "kroB200"]
+    instances = ["kroA200", "kroB100"]
     for instance in instances:
 
         results = []
         times = []
         problem = Problem(instance)
-        for i in range(100):
+        for i in range(1):
             print(i)
             cm = CandidateMoves(problem)
             cm.set_random(problem)

@@ -8,8 +8,7 @@ class CandidateMoves(Edges):
 
     def __init__(self, problem):
         super(CandidateMoves, self).__init__(problem, "steepest")
-
-        print(self.swap_nodes(4, 2, [x for x in range(6)]))
+        self.neighbours = []
 
     def find_five_nearest(self, vertex):
         dist = self.p.distances[vertex - 1]
@@ -17,6 +16,8 @@ class CandidateMoves(Edges):
 
 
     def optimize(self):
+        for i in self.v_indexes:
+            self.neighbours.append(self.find_five_nearest(i))
         self.path = self.build_path(self.nodes)
         print("Start distance", self.path_distance(self.path))
         improved = True
@@ -24,7 +25,7 @@ class CandidateMoves(Edges):
             best_action = None
             best_delta = 0
             for i in self.v_indexes:
-                candidates = self.find_five_nearest(i)
+                candidates = self.neighbours[i - 1]
                 for j in candidates:
                     if i == j: continue
                     if (i in self.nodes and j in self.unused) or (j in self.nodes and i in self.unused):
@@ -45,6 +46,7 @@ class CandidateMoves(Edges):
                 else:
                     self.do_outer_move(best_action.v1, best_action.v2)
                 self.path = self.build_path(self.nodes)
+                #kself.visualise(False, "", "")
             else:
                 break
         self.path = self.build_path(self.nodes)
