@@ -56,7 +56,7 @@ class CandidateMoves(Solution):
         while improved:
             improved = False
             for i in range(len(self.nodes)):
-                print(self.nodes)
+                # print(self.nodes)
                 candidate = self.find_five_nearest_from_nodes(self.nodes[i][0] - 1)
                 for j in candidate:
                     if abs(j - i) == 1: continue

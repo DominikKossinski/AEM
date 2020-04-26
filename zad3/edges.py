@@ -18,7 +18,7 @@ class Edges(Solution):
 
     def __init__(self, problem, style):
         super(Edges, self).__init__(problem)
-        print(self.p.vertices)
+        # print(self.p.vertices)
         self.style = style
         self.v_indexes = list(map(lambda x: x[0], self.p.vertices))
 
