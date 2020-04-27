@@ -14,11 +14,11 @@ def main():
     instances = ["kroA200","kroB200"]
     for instance in instances:
 
-        results = []
-        times = []
         problem = Problem(instance)
 
         
+        # results = []
+        # times = []
         # for i in range(1):
         #     print(i)
         #     edg = Edges(problem, 'steep')
@@ -33,9 +33,10 @@ def main():
         #     times.append(elapsed_time)
         # problem.save_results("Edges", "Steep", results, times)
 
+
         # results = []
         # times = []
-        # for i in range(1):
+        # for i in range(100):
         #     print(i)
         #     cm = CandidateMoves(problem)
         #     cm.set_random(problem)
@@ -44,7 +45,7 @@ def main():
         #     cm.optimize()
         #     end_time = time.time() * 1000
         #     elapsed_time = end_time - start_time
-        #     # cm.visualise(False, "alg", "")
+        #     cm.visualise(False, "alg", "")
         #     results.append(cm.dist)
         #     times.append(elapsed_time)
         # problem.save_results("CandidateMoves", "NoStyle", results, times)
