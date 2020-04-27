@@ -31,7 +31,7 @@ class Problem():
                 distances[j][i] = distance
         return distances
 
-    def save_results(self,alg, style, results, times=None):
+    def save_results(self,alg, style, results, times=None, path = None):
         min_dist = min(results)
         max_dist = max(results)
         mean_dist = np.mean(results)
@@ -57,3 +57,9 @@ class Problem():
             file.write("max_t;" + str(max_time) + "\n")
         print(results)
         file.close()
+        if path is not None:
+            print(path)
+            file_path = os.path.join(self.name, style, alg + "_min_cycle.pkl")
+            import pickle
+            with open(file_path, 'wb') as fp:
+                pickle.dump(path, fp)

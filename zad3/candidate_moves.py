@@ -1,6 +1,6 @@
 import numpy as np
 
-from zad3.edges import Edges, Action
+from edges import Edges, Action
 
 
 class CandidateMoves(Edges):
