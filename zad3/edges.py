@@ -172,9 +172,7 @@ class Edges(Solution):
     def optimize_steepest(self):
         self.path = self.build_path(self.nodes)
         print("Start distance", self.path_distance(self.path))
-        improved = True
-        while improved:
-            improved = False
+        while True:
             best_action = None
             best_delta = 0
             for i in self.v_indexes:
@@ -197,7 +195,6 @@ class Edges(Solution):
                 # print(best_action.v1, " v2", best_action.v2)
                 # if best_action.action == "swap":
                 #     print("v1 ind", self.nodes.index(best_action.v1), "v2 ind", self.nodes.index(best_action.v2))
-                improved = True
                 if best_action.action == "swap":
                     self.do_swap_move(best_action.v1, best_action.v2)
                 else:

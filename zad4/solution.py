@@ -54,12 +54,14 @@ class Solution():
         path = []
         for i in range(len(nodes)):
             if i + 1 < len(nodes):
-                path.append((nodes[i][0], nodes[i + 1][0]))
+                path.append((nodes[i], nodes[i + 1]))
             else:
-                path.append((nodes[i][0], nodes[0][0]))
+                path.append((nodes[i], nodes[0]))
         return path
 
-    def visualise(self, save, alg, style=""):
+    def visualise(self, save, alg, style="", path=None):
+        if path is not None:
+            self.path = path
         G = nx.Graph()
         plt.figure(figsize=(16, 16))
         for i in range(len(self.p.vertices)):
@@ -70,7 +72,6 @@ class Solution():
 
         pos = nx.get_node_attributes(G, 'pos')
         labels = nx.get_edge_attributes(G, 'weight')
-
         nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
         nx.draw_networkx(G, pos, node_size=30, edge_labels=nx.get_node_attributes(G, "weight"))
         if save:
