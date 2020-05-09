@@ -18,7 +18,7 @@ def main():
         times = []
         min_msls = None
         min_path = None
-        for i in range(1):
+        for i in range(10):
             print("MSLS", instance, i)
             start_time = time.time() * 1000
             msls.optimize()
@@ -38,7 +38,7 @@ def main():
         results = []
         min_ils1 = None
         min_path = None
-        for i in range(5):
+        for i in range(10):
             print("ILS1", instance, i)
             ils1 = ILS1(problem, avg_time)
             ils1.optimize()

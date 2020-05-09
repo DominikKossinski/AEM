@@ -26,7 +26,7 @@ class ILS1(MSLS):
                 best_dist = self.dist
                 best_nodes = self.nodes
             current_time = time.time() * 1000
-            if current_time - start_time > self.time:
+            if current_time - start_time > self.time - 10_000:
                 break
         print("TotalTime:", current_time - start_time)
         self.path = self.build_path(best_nodes)
@@ -59,7 +59,7 @@ class ILS1(MSLS):
     def replace_to_random(self, max_dists, k):
         random_indexes = np.arange(self.n // 2)
         np.random.shuffle(random_indexes)
-        random_indexes = random_indexes[:10]
+        random_indexes = random_indexes[:k]
         for v_in, v_out in zip(max_dists, random_indexes):
             self.nodes[v_in[1]] = self.unused[v_out]
 

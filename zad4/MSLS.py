@@ -20,23 +20,19 @@ class MSLS(Solution):
         super(MSLS, self).__init__(problem)
         self.v_indexes = list(map(lambda x: x[0], self.p.vertices))
         self.n = len(self.v_indexes)
-
-    def set_random(self):
         v = self.p.vertices.copy()
         random.shuffle(v)
-        self.nodes = v[:int(np.ceil(self.p.n / 2))]
-        self.unused = v[int(np.ceil(self.p.n / 2)):]
 
         self.v_indexes = list(map(lambda x: x[0], self.p.vertices))
         self.nodes = list(map(lambda x: x[0], self.nodes))
         self.unused = list(map(lambda x: x[0], self.unused))
-        self.n = len(self.v_indexes)
 
-        self.path = self.build_path(self.nodes)
-        self.dist = self.path_distance(self.path)
+    def set_random(self):
+        random.shuffle(self.v_indexes)
+        self.nodes = self.v_indexes[:int(np.ceil(self.p.n / 2))]
+        self.unused = self.v_indexes[int(np.ceil(self.p.n / 2)):]
 
     def optimize(self):
-        start_time = time.time() * 1000
         best_solution = None
         best_distance = None
         # TODO change to 100
@@ -48,14 +44,12 @@ class MSLS(Solution):
                 print("Best")
                 best_distance = self.dist
                 best_solution = self.path
-            end_time = time.time() * 1000
-            print("Current Time", round((end_time - start_time) / 1000))
         self.path = best_solution
         self.dist = best_distance
 
     def swap_nodes(self, start, end, nodes):
         if start == end: return nodes
-        new_nodes =nodes.copy()
+        new_nodes = nodes.copy()
         if start < end:
             new_nodes = nodes.copy()
             new_nodes[0:start] = nodes[0:start]
@@ -116,12 +110,12 @@ class MSLS(Solution):
     def run_algorithm(self):
         self.unused = np.setdiff1d(np.arange(1, self.p.n + 1), self.nodes)
         self.path = self.build_path(self.nodes)
-        #print("Start distance", self.path_distance(self.path))
+        # print("Start distance", self.path_distance(self.path))
         while True:
             best_action = None
             best_delta = 0
             for e, i in enumerate(self.nodes):
-                for j in self.nodes[e:]:
+                for j in self.nodes[e + 1:]:
                     if i == j: continue
                     delta = self.calc_swap_move(i, j)
                     if delta < best_delta:
@@ -140,10 +134,10 @@ class MSLS(Solution):
                 else:
                     self.do_outer_move(best_action.v1, best_action.v2)
                     self.unused = np.setdiff1d(np.arange(1, self.p.n + 1), self.nodes)
-                #self.path = self.build_path(self.nodes)
+                # self.path = self.build_path(self.nodes)
             else:
                 break
         self.path = self.build_path(self.nodes)
         self.dist = self.path_distance(self.path)
-        #print("End distance:", self.dist)
-        #print("Path len:", len(np.unique(self.nodes)))
+        # print("End distance:", self.dist)
+        # print("Path len:", len(np.unique(self.nodes)))
