@@ -46,7 +46,7 @@ class ILS2(MSLS):
         self.unuseD = {}
         self.distances = []
         self.ni = int(np.ceil(self.p.n / 2))
-        self.nmr_dst = int(0.3*self.ni)
+        self.nmr_dst = int(0.2*self.ni)
         self.make_node_objects()
         self.sort_dists()
 
@@ -160,7 +160,7 @@ class ILS2(MSLS):
         
     
         dists = sorted(dists, key = lambda x: x[2])
-        print(len(self.nodeD.values()), int(self.nmr_dst))
+        # print(len(self.nodeD.values()), int(self.nmr_dst))
 
         kj = 0
         while len(self.nodeD.values()) < self.ni:
