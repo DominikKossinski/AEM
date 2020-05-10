@@ -40,15 +40,14 @@ class ILS2(MSLS):
         self.set_random()
         self.nodeD = {}
         self.path = self.build_path(self.nodes)
-        self.longest = []
         
         self.unused = np.setdiff1d(np.arange(1, self.p.n + 1), self.nodes)
         self.unuseD = {}
         self.distances = []
         self.ni = int(np.ceil(self.p.n / 2))
         self.nmr_dst = int(0.2*self.ni)
-        self.make_node_objects()
-        self.sort_dists()
+        # self.make_node_objects()
+        # self.sort_dists()
 
 
     def sort_dists(self):
@@ -84,7 +83,13 @@ class ILS2(MSLS):
         # print([k.fprint() for k in self.nodeD.values()], "")
 
         while True:
-            
+            self.unuseD = {}
+            self.distances = []
+            self.nodeD = {}
+            self.unused = np.setdiff1d(np.arange(1, self.p.n + 1), self.nodes)
+            self.make_node_objects()
+            self.sort_dists()
+
             self.remove_longest()
             self.repair()
             self.update_old()
@@ -189,3 +194,8 @@ class ILS2(MSLS):
         for node in self.unuseD.values():
             self.unused.append(node.id)
 
+        for k,node in self.nodeD.items():
+            del node
+
+        for k,node in self.unuseD.items():
+            del node
