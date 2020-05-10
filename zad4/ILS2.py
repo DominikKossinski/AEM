@@ -79,9 +79,7 @@ class ILS2(MSLS):
         start_time = time.time() * 1000
         best_dist = 10**10
         best_nodes = None
-        print("ggggggggggggggg")
         self.run_algorithm()
-        print("ddddddddddddddddddddd")
         # print([k.fprint() for k in self.unuseD.values()], "")
         # print([k.fprint() for k in self.nodeD.values()], "")
 
@@ -117,11 +115,10 @@ class ILS2(MSLS):
         for node in to_remove:
             # print(node.fprint())
             self.remove_node(node.id)
-        print("")
+        # print("")
         while len(self.nodeD.values()) > self.ni - int(self.nmr_dst):
-            # print("dddd")
             longest = max(self.nodeD.values(), key = lambda x: x.dsum)
-            print(longest.fprint())
+            # print(longest.fprint())
             self.remove_node(longest.id)
 
     def remove_node(self,k):
@@ -151,7 +148,6 @@ class ILS2(MSLS):
                 if fc not in self.unuseD: continue
                 
                 can = self.unuseD[fc]
-                # if can.id not in self.unuseD: print(can.id, node.id, mn_dst,"ERRaaaaadddd")
                 dst = self.p.distances[node.id-1][can.id-1] + \
                       self.p.distances[can.id-1][nx.id -1] - \
                       node.dnxt
@@ -160,13 +156,10 @@ class ILS2(MSLS):
                     mn_nd = can
             
             if mn_nd is not None:
-                # if mn_nd.id not in self.unuseD: print(mn_nd.id, node.id, mn_dst,"ERRdddd")
                 dists.append((mn_nd, node, mn_dst))
         
-        # for k in dists:
-        #     if k[0].id not in self.unuseD: print(k[0].id, k[1].id, mn_dst,"TUUU")
+    
         dists = sorted(dists, key = lambda x: x[2])
-        # dists = dists[:int(self.nmr_dst)]
         print(len(self.nodeD.values()), int(self.nmr_dst))
 
         kj = 0
@@ -175,13 +168,10 @@ class ILS2(MSLS):
             if k[0].id in self.unuseD:
                 self.add_to_path(k)
             kj+=1
-        
-        if len(self.nodeD.values()) < self.ni: print("WWWWWWWWW", len(self.nodeD.values()))
 
     def add_to_path(self, k):
 
         ins,node,_ = k
-        if ins.id not in self.unuseD: print(ins.id, node.id, "ERR")
         ins.inpath = 1
         ins.nxt = node.nxt
         ins.dnxt = self.p.distances[ins.id-1, node.nxt.id-1]
