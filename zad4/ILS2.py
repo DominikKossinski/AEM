@@ -105,21 +105,11 @@ class ILS2(MSLS):
     def remove_longest(self):
         to_remove = []
 
-        srtD = self.nodeD.values()
-        srtD = sorted(srtD, key = lambda x: x.dsum, reverse = True)
-        # print([k.fprint() for k in srtD], "")
-
-        to_remove = srtD[:int(self.nmr_dst/3)]
-        # print([k.fprint() for k in to_remove], "\n\n")
-
-        for node in to_remove:
-            # print(node.fprint())
-            self.remove_node(node.id)
-        # print("")
         while len(self.nodeD.values()) > self.ni - int(self.nmr_dst):
             longest = max(self.nodeD.values(), key = lambda x: x.dsum)
             # print(longest.fprint())
-            self.remove_node(longest.id)
+            if longest.id in self.nodeD:
+                self.remove_node(longest.id)
 
     def remove_node(self,k):
         node = self.nodeD[k]
