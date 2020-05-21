@@ -81,7 +81,7 @@ class ILS2(MSLS):
         self.run_algorithm()
         # print([k.fprint() for k in self.unuseD.values()], "")
         # print([k.fprint() for k in self.nodeD.values()], "")
-
+        a = 0
         while True:
             self.unuseD = {}
             self.distances = []
@@ -93,13 +93,15 @@ class ILS2(MSLS):
             self.remove_longest()
             self.repair()
             self.update_old()
-
+            print(a)
+            a += 1
             self.run_algorithm()
-            
+
             if best_dist > self.dist:
                 best_dist = self.dist
                 best_nodes = self.nodes
             current_time = time.time() * 1000
+
             if current_time - start_time > self.time - 10_000:
                 break
         print("TotalTime:", current_time - start_time)
