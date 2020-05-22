@@ -35,7 +35,6 @@ class MSLS(Solution):
     def optimize(self):
         best_solution = None
         best_distance = None
-        # TODO change to 100
         for i in range(100):
             print(i)
             self.set_random()
