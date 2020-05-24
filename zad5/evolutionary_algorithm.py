@@ -20,7 +20,7 @@ class EvolutionaryAlgorithm(Solution):
 
     def __init__(self, problem, time, debug=False):
         super(EvolutionaryAlgorithm, self).__init__(problem)
-        self.population_size = 3
+        self.population_size = 20
         self.time = time
         self.iterations = 0
         self.population = []
@@ -30,11 +30,14 @@ class EvolutionaryAlgorithm(Solution):
         self.debug = debug
 
     def create_population(self):
+        i = 0
         while len(self.population) != self.population_size:
             random.shuffle(self.v_indexes)
             nodes = self.v_indexes[:int(np.ceil(self.p.n / 2))]
+            dist, nodes = self.run_algorithm(nodes)
             if nodes not in self.population:
-                dist, nodes = self.run_algorithm(nodes)
+                print("i =", i)
+                i += 1
                 # path = self.build_path(nodes)
                 # dist = self.path_distance(path)
                 self.population.append((dist, nodes))
@@ -68,13 +71,14 @@ class EvolutionaryAlgorithm(Solution):
         if dist < max_dist[0] and (dist, nodes) not in self.population:
             self.population[index] = (dist, nodes)
             path = self.build_path(nodes)
-            self.visualise(False, "", path=path)
+            if self.debug:
+                self.visualise(False, "", path=path)
             print("Change")
         # exit(0)
 
     def find_common(self, parents):
         # TODO remove
-        parents = [0, 1]
+        # parents = [0, 2]
         p0 = self.population[parents[0]]
         path0 = self.build_path(p0[1])
         p1 = self.population[parents[1]]
@@ -126,9 +130,11 @@ class EvolutionaryAlgorithm(Solution):
             print("P1:", p1)
             print("Common parts:", common_parts)
             print("Common v:", len(common_v), common_v)
-        self.visualise_common(path0, path1, common_parts, common_v)
-
-        unused = np.setdiff1d(np.arange(1, self.p.n + 1), np.array(common_v))
+            self.visualise_common(path0, path1, common_parts, common_v)
+        all_parents = np.unique(p0[1] + p1[1])
+        print("AllParents: ", len(all_parents))
+        print("Common:", len(common_v))
+        unused = np.setdiff1d(all_parents, np.array(common_v))
         random.shuffle(unused)
         to_add = (self.p.n // 2) - len(common_v)
         for i in range(to_add):

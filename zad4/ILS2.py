@@ -46,6 +46,7 @@ class ILS2(MSLS):
         self.distances = []
         self.ni = int(np.ceil(self.p.n / 2))
         self.nmr_dst = int(0.2*self.ni)
+        self.iterations = 0
         # self.make_node_objects()
         # self.sort_dists()
 
@@ -81,7 +82,6 @@ class ILS2(MSLS):
         self.run_algorithm()
         # print([k.fprint() for k in self.unuseD.values()], "")
         # print([k.fprint() for k in self.nodeD.values()], "")
-        a = 0
         while True:
             self.unuseD = {}
             self.distances = []
@@ -93,8 +93,8 @@ class ILS2(MSLS):
             self.remove_longest()
             self.repair()
             self.update_old()
-            print(a)
-            a += 1
+            print(self.iterations)
+            self.iterations += 1
             self.run_algorithm()
 
             if best_dist > self.dist:

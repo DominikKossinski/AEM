@@ -14,7 +14,7 @@ def main():
     for instance in instances:
         problem = Problem(instance)
 
-        msls = MSLS(problem)
+        #msls = MSLS(problem)
         results = []
         times = []
         min_msls = None
@@ -40,21 +40,21 @@ def main():
         print("Avg time", avg_time)
         results = []
         iterations = []
-        min_ils1 = None
+        min_ils2 = None
         min_path = None
         for i in range(5):
-            print("ILS1", instance, i)
-            ils1 = ILS1(problem, avg_time)
-            ils1.optimize()
-            #if min_ils1 is None or min_ils1 > ils1.dist:
-                # if min_ils1 is not None:
-                #     os.remove("ILS1_" + instance + "_" + str(min_ils1) + ".png")
-            min_ils1 = ils1.dist
-            min_path = ils1.path.copy()
-            msls.visualise(True, "ILS1_" + instance, str(min_ils1), min_path)
-            results.append(ils1.dist)
-            iterations.append(ils1.iterations)
-        problem.save_results("ILS1", "", results, times=iterations)
+            print("ILS2", instance, i)
+            ils2 = ILS2(problem, avg_time)
+            ils2.optimize()
+            #if min_ils2 is None or min_ils2 > ils2.dist:
+                # if min_ils2 is not None:
+                #     os.remove("ILS2_" + instance + "_" + str(min_ils2) + ".png")
+            min_ils2 = ils2.dist
+            min_path = ils2.path.copy()
+            ils2.visualise(True, "ILS2_" + instance, str(min_ils2), min_path)
+            results.append(ils2.dist)
+            iterations.append(ils2.iterations)
+        problem.save_results("ILS2", "", results, times=iterations)
 
 if __name__ == '__main__':
     main()
