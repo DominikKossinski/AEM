@@ -16,7 +16,7 @@ class ProbabilityCounter:
         with open(f"NodesLists{instance}.pkl", "wb") as f:
             pickle.dump(self.nodes_list, f)
             f.close()
-        with open(f"Results{instance}.pkl") as f:
+        with open(f"Results{instance}.pkl", "wb") as f:
             pickle.dump(self.results, f)
             f.close()
         self.best_result = min(self.results)
