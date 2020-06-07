@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.stats import pearsonr
 
 
 class ProbabilityCounter:
@@ -15,11 +16,11 @@ class ProbabilityCounter:
         self.best_solution_path = self.build_path(self.best_solution)
         self.common_edges_p = dict()  # [result] =  list(p_vertices)
         self.common_vertices_p = dict()  # [result] = list(p_edges)
-        i = 0
+        self.i = 0
         for nodes, result in zip(nodes_list, results):
-            self.debug = i % 20 == 0
+            self.debug = self.i % 100 == 0
             self.find_common(nodes, result)
-            i += 1
+            self.i += 1
         self.visualise_probabilities()
 
     def find_common(self, nodes, result):
@@ -127,6 +128,7 @@ class ProbabilityCounter:
             nx.draw_networkx_edges(G, pos, edgelist=part, edge_color='r')
         nx.draw_networkx_nodes(G, pos, nodelist=common_v, node_color='r', node_size=60)
         plt.axis("off")
+        plt.savefig(f"Common{self.i}.png")
         plt.show()
 
     def visualise_probabilities(self):
@@ -139,13 +141,25 @@ class ProbabilityCounter:
             mean_p_edges.append(np.mean(self.common_edges_p[result]))
             mean_p_vertices.append(np.mean(self.common_vertices_p[result]))
 
-        cor_edges = np.sum((results_for_plot - np.mean(results_for_plot)) * (mean_p_edges - np.mean(mean_p_edges))) / \
-                    (np.std(results_for_plot) * np.std(mean_p_edges))
-        print("Cor edges:", cor_edges)
+        cor_edges = pearsonr(results_for_plot, mean_p_edges)
+        print("Cor edges", cor_edges)
+
+        cor_vertices = pearsonr(results_for_plot, mean_p_vertices)
+        print("Cor vertices:", cor_vertices)
+
+        with open("results.txt", "w+") as f:
+            f.write(f"Cor edges;{cor_edges}\n")
+            f.write(f"cor vercices;{cor_vertices}\n")
+            f.write(f"best_result;{self.best_solution}")
+            f.flush()
+            f.close()
+
         plt.plot(results_for_plot, mean_p_vertices, 'o')
         plt.title("Prawdopodobieństwo wspólnego wierzchołka")
+        plt.savefig("P_nodes.png")
         plt.show()
 
         plt.plot(results_for_plot, mean_p_edges, 'o')
         plt.title("Prawdopodobiaństwo wspólnej krawędzi")
+        plt.savefig("P_edges.png")
         plt.show()
