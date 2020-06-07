@@ -1,3 +1,5 @@
+import pickle
+
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
@@ -6,11 +8,17 @@ from scipy.stats import pearsonr
 
 class ProbabilityCounter:
 
-    def __init__(self, problem, nodes_list, results, debug=False):
+    def __init__(self, problem, nodes_list, results, instance, debug=False):
         self.p = problem
         self.debug = debug
         self.nodes_list = nodes_list
         self.results = results
+        with open(f"NodesLists{instance}.pkl", "wb") as f:
+            pickle.dump(self.nodes_list, f)
+            f.close()
+        with open(f"Results{instance}.pkl") as f:
+            pickle.dump(self.results, f)
+            f.close()
         self.best_result = min(self.results)
         self.best_solution = self.nodes_list[self.results.index(self.best_result)]
         self.best_solution_path = self.build_path(self.best_solution)
@@ -74,7 +82,7 @@ class ProbabilityCounter:
         all_parents = np.unique(self.best_solution + nodes)
         print("AllParents: ", len(all_parents))
         print("Common Vertices:", len(common_v))
-        p_vertices = len(common_v) / len(nodes)
+        p_vertices = len(common_v)
         if result in self.common_vertices_p.keys():
             self.common_vertices_p[result].append(p_vertices)
         else:
@@ -83,7 +91,7 @@ class ProbabilityCounter:
         for part in common_parts:
             edges_count += len(part) - 1
         print("Common edges:", edges_count)
-        p_edges = edges_count / len(nodes)
+        p_edges = edges_count
         if result in self.common_edges_p.keys():
             self.common_edges_p[result].append(p_edges)
         else:
@@ -147,19 +155,27 @@ class ProbabilityCounter:
         cor_vertices = pearsonr(results_for_plot, mean_p_vertices)
         print("Cor vertices:", cor_vertices)
 
+        mean_edges = np.mean(mean_p_edges)
+        print("Mean edges", mean_edges)
+
+        mean_vertices = np.mean(mean_p_vertices)
+        print("Mean vertices", mean_vertices)
+
         with open("results.txt", "w+") as f:
             f.write(f"Cor edges;{cor_edges}\n")
             f.write(f"cor vercices;{cor_vertices}\n")
-            f.write(f"best_result;{self.best_solution}")
+            f.write(f"mean edges;{mean_edges}\n")
+            f.write(f"mean verticles:{mean_vertices}\n")
+            f.write(f"best_result;{self.best_solution}\n")
             f.flush()
             f.close()
 
         plt.plot(results_for_plot, mean_p_vertices, 'o')
-        plt.title("Prawdopodobieństwo wspólnego wierzchołka")
+        plt.title("Podobieństwo wierzchołków")
         plt.savefig("P_nodes.png")
         plt.show()
 
         plt.plot(results_for_plot, mean_p_edges, 'o')
-        plt.title("Prawdopodobiaństwo wspólnej krawędzi")
+        plt.title("Podobieństwo krawędzi")
         plt.savefig("P_edges.png")
         plt.show()

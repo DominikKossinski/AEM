@@ -12,6 +12,7 @@ if __name__ == '__main__':
     problem = Problem("kroA200")
     results = []
     nodes_lists = []
+    print(f"Test{results}")
     for i in tqdm.trange(1000):
         gls = GreedyLocalSearch(problem)
         gls.run_algorithm()
